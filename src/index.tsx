@@ -1,11 +1,16 @@
 import * as React from 'react';
+import { ApolloProvider } from 'react-apollo';
 import * as ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
+import client from './client';
+import App from './components/App';
+
 import registerServiceWorker from './registerServiceWorker';
 
+
 ReactDOM.render(
-  <App />,
-  document.getElementById('root') as HTMLElement
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById('root') as HTMLElement,
 );
 registerServiceWorker();
