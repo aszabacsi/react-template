@@ -1,6 +1,8 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
-import { graphql } from 'react-apollo';
+import { 
+  graphql
+} from 'react-apollo';
 
 interface Item {
   id: number;
@@ -8,29 +10,35 @@ interface Item {
 };
 
 interface IAppProps {
-  data: {
-    items: Item[];
-    refetch: () => void;
-  }
+  items: Item[];
 };
 
-const App = ({ data: { items, refetch } }: IAppProps) => {
 
-  const handleRefresh = () => refetch();
+class App extends React.Component<IAppProps> {
 
-  return (
-    <div>
-      <button onClick={handleRefresh}>Refresh</button>
-      <ul>{items && items.map(item => <li key={item.id}>{item.name}</li>)}</ul>
-    </div>
-  );
+  public render() {
+    
+    const { items } = this.props;
+    
+    return (
+      <div>
+        <ul>{items && items.map(item => <li key={item.id}>{item.name}</li>)}</ul>
+      </div>
+    );
+  }
 }
 
-export default graphql(gql`
-  query ItemAppQuery {
+const ITEM_QUERY = gql`
+  query {
     item {
       id
       name
     }
   }
-`)(App);
+`;
+
+const connectedApp = graphql(ITEM_QUERY)(App);
+
+export default connectedApp;
+
+
