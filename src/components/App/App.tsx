@@ -1,36 +1,37 @@
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 import * as React from 'react';
-import { graphql } from 'react-apollo';
+import { Query } from 'react-apollo';
 
-interface Item {
-  id: number;
-  name: string;
-};
-
-interface IAppProps {
-  data: {
-    items: Item[];
-    refetch: () => void;
-  }
-};
-
-const App = ({ data: { items, refetch } }: IAppProps) => {
-
-  const handleRefresh = () => refetch();
-
-  return (
-    <div>
-      <button onClick={handleRefresh}>Refresh</button>
-      <ul>{items && items.map(item => <li key={item.id}>{item.name}</li>)}</ul>
-    </div>
-  );
-}
-
-export default graphql(gql`
-  query ItemAppQuery {
-    item {
+const userQuery = gql`
+  {
+    user(id: 0) {
       id
-      name
+      firstName
+      lastName
     }
   }
-`)(App);
+`;
+
+const User = () => {
+  return (
+    <Query query={userQuery}>
+    {
+      ({ loading, data: { user }, error }) => {
+        if(loading) {
+          return <div>Loading...</div>;
+        }
+        if(error) {
+          return <div>Error</div>;
+        }
+
+        return (
+          <div>{user.id}: { user.firstName } { user.lastName }</div>
+        );
+      }
+    }
+    </Query>
+  );
+};
+
+export default User;
+
